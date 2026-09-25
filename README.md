@@ -3,155 +3,199 @@
   <h3>Trajectory-Calibrated Regression for Robot Policy Merging</h3>
   <p><strong>Multiple specialists. One fixed robot policy.</strong></p>
   <p>
-    <a href="#real-robot-demonstrations">Real-robot demos</a> ·
-    <a href="#libero-demonstrations">LIBERO demos</a> ·
-    <a href="docs/VIDEOS.md">All videos</a> ·
-    <a href="https://chatonz.github.io/vla-merge/">Video gallery</a> ·
-    <a href="#getting-started">Get started</a> ·
-    <a href="docs/reproduction.md">Method &amp; code</a>
+    <a href="#1-tcr-on-a-real-robot">TCR on a real robot</a> ·
+    <a href="#2-real-robot-method-comparisons">Real-robot comparisons</a> ·
+    <a href="#3-libero-method-comparisons">LIBERO comparisons</a> ·
+    <a href="#4-more-trials-and-failure-cases">More trials &amp; failures</a> ·
+    <a href="#5-complete-video-collection">All recordings</a>
   </p>
 </div>
 
-TCR merges compatible robot specialists using inputs collected during frozen-expert execution. It replays the partially merged network in forward order and fits linear weights with prior-centered ridge regression, producing a **single policy with no additional inference-time router**. This release implements TCR for **π0.5 / LeRobot** and includes real-robot and LIBERO comparison videos.
+TCR merges compatible robot specialists into **one fixed policy without an additional inference-time router**. This page presents the visual supplement for the π0.5 / LeRobot implementation: real-robot demonstrations first, followed by comparisons on real tasks and four LIBERO suites.
 
-## Real-robot demonstrations
+**Start with Sections 1–2 for the real-robot results, then Section 3 for simulation comparisons.** All main comparisons animate directly below; click a panel for a larger MP4. Playback speeds and clip-selection rules are stated beside the figures. These recordings illustrate individual behavior; aggregate performance belongs in the paper's quantitative evaluation.
 
-Selected **TCR (ours)** recordings. Click a preview or its **Full video** link to open the MP4.
+## 1. TCR on a real robot
+
+Two TCR recordings introduce the real tasks. The original collection names are **Task 1** and **Task 2**.
 
 <table>
+  <tr><th align="center">Task 1 · TCR (ours)</th><th align="center">Task 2 · TCR (ours)</th></tr>
   <tr>
-    <th align="center">Task 1 · TCR (ours)</th>
-    <th align="center">Task 2 · TCR (ours)</th>
+    <td><a href="assets/videos/real_robot/tcr/task1/img_5011.mp4"><img src="assets/previews/real-task1.gif" alt="TCR real-robot Task 1, recording IMG_5011, preview at 2x speed" width="448"></a></td>
+    <td><a href="assets/videos/real_robot/tcr/task2/img_5021.mp4"><img src="assets/previews/real-task2.gif" alt="TCR real-robot Task 2, recording IMG_5021, preview at 2x speed" width="448"></a></td>
   </tr>
   <tr>
-    <td><a href="assets/videos/real_robot/tcr/task1/img_5011.mp4"><img src="assets/previews/real-task1.gif" alt="TCR real-robot Task 1 demonstration" width="448"></a></td>
-    <td><a href="assets/videos/real_robot/tcr/task2/img_5021.mp4"><img src="assets/previews/real-task2.gif" alt="TCR real-robot Task 2 demonstration" width="448"></a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="assets/videos/real_robot/tcr/task1/img_5011.mp4">▶ Full video</a> · <a href="docs/VIDEOS.md#real-robot">All methods & recordings</a></td>
-    <td align="center"><a href="assets/videos/real_robot/tcr/task2/img_5021.mp4">▶ Full video</a> · <a href="docs/VIDEOS.md#real-robot">All methods & recordings</a></td>
+    <td align="center"><a href="assets/videos/real_robot/tcr/task1/img_5011.mp4">▶ Original-speed video</a> · IMG_5011</td>
+    <td align="center"><a href="assets/videos/real_robot/tcr/task2/img_5021.mp4">▶ Original-speed video</a> · IMG_5021</td>
   </tr>
 </table>
 
-GIF previews play at **2× source speed**; MP4s retain the full visual duration. Task 1 and Task 2 follow the supplied folder labels. Each method has four recordings per task.
+**Preview speed: 2×.** The linked recordings preserve their full visual duration. All eight supplied TCR real-robot recordings are previewed in [Section 4](#4-more-trials-and-failure-cases).
 
-| Method | Task 1 | Task 2 |
-| :--- | :---: | :---: |
-| **TCR (ours)** | [4 videos](assets/videos/real_robot/tcr/task1/) | [4 videos](assets/videos/real_robot/tcr/task2/) |
-| Expert | [4 videos](assets/videos/real_robot/experts/task1/) | [4 videos](assets/videos/real_robot/experts/task2/) |
-| FeatCal | [4 videos](assets/videos/real_robot/featcal/task1/) | [4 videos](assets/videos/real_robot/featcal/task2/) |
-| RegMean++ | [4 videos](assets/videos/real_robot/regmeanpp/task1/) | [4 videos](assets/videos/real_robot/regmeanpp/task2/) |
-| Mean Soup | [4 videos](assets/videos/real_robot/soup/task1/) | [4 videos](assets/videos/real_robot/soup/task2/) |
-| TIES | [4 videos](assets/videos/real_robot/ties/task1/) | [4 videos](assets/videos/real_robot/ties/task2/) |
+## 2. Real-robot method comparisons
 
-## LIBERO demonstrations
+Each panel shows **TCR, Expert, FeatCal, RegMean++, Mean Soup, and TIES** in a fixed layout, with TCR at the top left. Both tasks use the first recording in filename order for every method. Trials were recorded independently, with different initial scenes; these are task-level visual comparisons, not paired-reset measurements.
 
-Selected **TCR (ours)** episodes across four suites. These examples carry `success` labels in the supplied filenames; the complete collection also includes failure episodes.
+**All tiles play at 2× source speed.** A finished clip holds its last frame and is marked as ended while longer recordings continue. No recording is shortened to match another.
+
+### Task 1
+
+[![Six-method real-robot Task 1 comparison; TCR at top left](assets/comparisons/real-task1.gif)](assets/comparisons/real-task1.mp4)
+
+[▶ Larger comparison MP4 · 2×](assets/comparisons/real-task1.mp4) · [All Task 1 recordings](docs/VIDEOS.md#task-1)
+
+### Task 2
+
+[![Six-method real-robot Task 2 comparison; TCR at top left](assets/comparisons/real-task2.gif)](assets/comparisons/real-task2.mp4)
+
+[▶ Larger comparison MP4 · 2×](assets/comparisons/real-task2.mp4) · [All Task 2 recordings](docs/VIDEOS.md#task-2)
+
+## 3. LIBERO method comparisons
+
+The same six-method layout makes it easy to follow TCR across **Long, Object, Goal, and Spatial**. Long-horizon behavior is shown first, followed by object, goal, and spatial variation. The complete collection includes four additional methods in the [full index](docs/VIDEOS.md#libero).
+
+**All tiles play at 0.25× the supplied MP4 playback speed.** Every panel uses the same task/run/episode identifiers across its methods: `task00 / r01 / ep00` for Long, Object, and Spatial; `task00 / r01 / ep01` for Goal. The Goal panel uses episode 01 as a successful TCR example; the failure from episode 00 appears in [Section 4](#4-more-trials-and-failure-cases). Success/failure labels are copied from the supplied filenames. Ended clips hold their final frame; the labels describe these individual episodes.
+
+### LIBERO-Long
+
+[![Six-method LIBERO-Long comparison, episode 00; TCR at top left](assets/comparisons/libero-long.gif)](assets/comparisons/libero-long.mp4)
+
+[▶ Larger comparison MP4 · 0.25×](assets/comparisons/libero-long.mp4) · [All LIBERO-Long recordings](docs/VIDEOS.md#libero-long)
+
+### LIBERO-Object
+
+[![Six-method LIBERO-Object comparison, episode 00; TCR at top left](assets/comparisons/libero-object.gif)](assets/comparisons/libero-object.mp4)
+
+[▶ Larger comparison MP4 · 0.25×](assets/comparisons/libero-object.mp4) · [All LIBERO-Object recordings](docs/VIDEOS.md#libero-object)
+
+### LIBERO-Goal
+
+[![Six-method LIBERO-Goal comparison, episode 01; TCR at top left](assets/comparisons/libero-goal.gif)](assets/comparisons/libero-goal.mp4)
+
+[▶ Larger comparison MP4 · 0.25×](assets/comparisons/libero-goal.mp4) · [All LIBERO-Goal recordings](docs/VIDEOS.md#libero-goal)
+
+### LIBERO-Spatial
+
+[![Six-method LIBERO-Spatial comparison, episode 00; TCR at top left](assets/comparisons/libero-spatial.gif)](assets/comparisons/libero-spatial.mp4)
+
+[▶ Larger comparison MP4 · 0.25×](assets/comparisons/libero-spatial.mp4) · [All LIBERO-Spatial recordings](docs/VIDEOS.md#libero-spatial)
+
+## 4. More trials and failure cases
+
+### Additional TCR real-robot trials
+
+Expand either task to inspect **every supplied TCR recording**, including the two previews in Section 1. All previews below run at 2× source speed; each links to its full original-speed MP4.
+
+<details>
+<summary><strong>Task 1 — all four TCR recordings</strong></summary>
 
 <table>
-  <tr><th align="center">LIBERO-Spatial</th><th align="center">LIBERO-Object</th><th align="center">LIBERO-Goal</th><th align="center">LIBERO-Long</th></tr>
   <tr>
-    <td><a href="assets/videos/libero/tcr/libero_spatial/task00_r01_ep00_success.mp4"><img src="assets/previews/libero-spatial.gif" alt="TCR on LIBERO-Spatial" width="220"></a></td>
-    <td><a href="assets/videos/libero/tcr/libero_object/task00_r01_ep00_success.mp4"><img src="assets/previews/libero-object.gif" alt="TCR on LIBERO-Object" width="220"></a></td>
-    <td><a href="assets/videos/libero/tcr/libero_goal/task00_r01_ep01_success.mp4"><img src="assets/previews/libero-goal.gif" alt="TCR on LIBERO-Goal" width="220"></a></td>
-    <td><a href="assets/videos/libero/tcr/libero_10/task00_r01_ep00_success.mp4"><img src="assets/previews/libero-long.gif" alt="TCR on LIBERO-Long" width="220"></a></td>
+    <th align="center">Recording 1 · IMG_5011</th>
+    <th align="center">Recording 2 · IMG_5012</th>
+    <th align="center">Recording 3 · IMG_5013</th>
+    <th align="center">Recording 4 · IMG_5014</th>
   </tr>
   <tr>
-    <td align="center"><a href="assets/videos/libero/tcr/libero_spatial/task00_r01_ep00_success.mp4">▶ Full video</a></td>
-    <td align="center"><a href="assets/videos/libero/tcr/libero_object/task00_r01_ep00_success.mp4">▶ Full video</a></td>
-    <td align="center"><a href="assets/videos/libero/tcr/libero_goal/task00_r01_ep01_success.mp4">▶ Full video</a></td>
-    <td align="center"><a href="assets/videos/libero/tcr/libero_10/task00_r01_ep00_success.mp4">▶ Full video</a></td>
+    <td><a href="assets/videos/real_robot/tcr/task1/img_5011.mp4"><img src="assets/previews/real-task1.gif" alt="TCR Task 1 recording IMG_5011 at 2x speed" width="224"></a></td>
+    <td><a href="assets/videos/real_robot/tcr/task1/img_5012.mp4"><img src="assets/previews/real-task1-trial2.gif" alt="TCR Task 1 recording IMG_5012 at 2x speed" width="224"></a></td>
+    <td><a href="assets/videos/real_robot/tcr/task1/img_5013.mp4"><img src="assets/previews/real-task1-trial3.gif" alt="TCR Task 1 recording IMG_5013 at 2x speed" width="224"></a></td>
+    <td><a href="assets/videos/real_robot/tcr/task1/img_5014.mp4"><img src="assets/previews/real-task1-trial4.gif" alt="TCR Task 1 recording IMG_5014 at 2x speed" width="224"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="assets/videos/real_robot/tcr/task1/img_5011.mp4">▶ Original-speed MP4</a></td>
+    <td align="center"><a href="assets/videos/real_robot/tcr/task1/img_5012.mp4">▶ Original-speed MP4</a></td>
+    <td align="center"><a href="assets/videos/real_robot/tcr/task1/img_5013.mp4">▶ Original-speed MP4</a></td>
+    <td align="center"><a href="assets/videos/real_robot/tcr/task1/img_5014.mp4">▶ Original-speed MP4</a></td>
   </tr>
 </table>
 
-GIF previews play at **0.25× the supplied MP4 playback speed** for readability. Original MP4 timing is unchanged. LIBERO-Long corresponds to the `libero_10` directory.
+</details>
 
-The [complete LIBERO index](docs/VIDEOS.md#libero) includes **TCR, Experts, FeatCal, RegMean, RegMean++, Mean Soup, TIES, Task Arithmetic, KNOTS-TIES, and WUDI**: three episodes per suite for every method. Videos illustrate behavior and are not aggregate benchmark measurements.
+<details>
+<summary><strong>Task 2 — all four TCR recordings</strong></summary>
 
-## Browse all 168 videos
+<table>
+  <tr>
+    <th align="center">Recording 1 · IMG_5021</th>
+    <th align="center">Recording 2 · IMG_5022</th>
+    <th align="center">Recording 3 · IMG_5026</th>
+    <th align="center">Recording 4 · IMG_5028</th>
+  </tr>
+  <tr>
+    <td><a href="assets/videos/real_robot/tcr/task2/img_5021.mp4"><img src="assets/previews/real-task2.gif" alt="TCR Task 2 recording IMG_5021 at 2x speed" width="224"></a></td>
+    <td><a href="assets/videos/real_robot/tcr/task2/img_5022.mp4"><img src="assets/previews/real-task2-trial2.gif" alt="TCR Task 2 recording IMG_5022 at 2x speed" width="224"></a></td>
+    <td><a href="assets/videos/real_robot/tcr/task2/img_5026.mp4"><img src="assets/previews/real-task2-trial3.gif" alt="TCR Task 2 recording IMG_5026 at 2x speed" width="224"></a></td>
+    <td><a href="assets/videos/real_robot/tcr/task2/img_5028.mp4"><img src="assets/previews/real-task2-trial4.gif" alt="TCR Task 2 recording IMG_5028 at 2x speed" width="224"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="assets/videos/real_robot/tcr/task2/img_5021.mp4">▶ Original-speed MP4</a></td>
+    <td align="center"><a href="assets/videos/real_robot/tcr/task2/img_5022.mp4">▶ Original-speed MP4</a></td>
+    <td align="center"><a href="assets/videos/real_robot/tcr/task2/img_5026.mp4">▶ Original-speed MP4</a></td>
+    <td align="center"><a href="assets/videos/real_robot/tcr/task2/img_5028.mp4">▶ Original-speed MP4</a></td>
+  </tr>
+</table>
 
-- **[Video index](docs/VIDEOS.md)** — every recording, grouped by domain, task, and method; works directly on GitHub.
-- **[Interactive gallery](https://chatonz.github.io/vla-merge/)** — filter methods and tasks, then play full videos in the browser. See [Publishing](docs/PUBLISHING.md) for local preview and deployment instructions.
-- **[Media manifest](assets/media.json)** — paths, durations, dimensions, source filenames, and supplied outcome labels.
+</details>
 
-To view the gallery locally, run this from the repository root and open **http://localhost:8000**:
+### TCR failure examples in LIBERO
+
+The supplied collection also contains TCR episodes labeled **failure**. Two are shown here alongside the earlier successful examples, so the supplement includes observable limitations as well as selected demonstrations. The preview speed is 0.25× the supplied file playback speed.
+
+<table>
+  <tr><th align="center">LIBERO-Object · episode 01 · failure</th><th align="center">LIBERO-Goal · episode 00 · failure</th></tr>
+  <tr>
+    <td align="center"><a href="assets/videos/libero/tcr/libero_object/task00_r01_ep01_failure.mp4"><img src="assets/previews/libero-object-failure.gif" alt="TCR failure example on LIBERO-Object episode 01" width="320"></a></td>
+    <td align="center"><a href="assets/videos/libero/tcr/libero_goal/task00_r01_ep00_failure.mp4"><img src="assets/previews/libero-goal-failure.gif" alt="TCR failure example on LIBERO-Goal episode 00" width="320"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="assets/videos/libero/tcr/libero_object/task00_r01_ep01_failure.mp4">▶ Supplied-speed MP4</a></td>
+    <td align="center"><a href="assets/videos/libero/tcr/libero_goal/task00_r01_ep00_failure.mp4">▶ Supplied-speed MP4</a></td>
+  </tr>
+</table>
+
+## 5. Complete video collection
+
+| Collection | Coverage | Open |
+| :--- | :--- | :--- |
+| Real robot | 6 methods × 2 tasks × 4 recordings = **48 clips** | [Every real-robot recording](docs/VIDEOS.md#real-robot) |
+| LIBERO | 10 methods × 4 suites × 3 episodes = **120 clips** | [Every LIBERO recording](docs/VIDEOS.md#libero) |
+| Figure provenance | Exact inputs, playback factors, and final-frame padding for all six comparison panels | [Comparison manifest](assets/comparisons/manifest.json) |
+
+The full LIBERO collection contains **TCR, Experts, FeatCal, RegMean, RegMean++, Mean Soup, TIES, Task Arithmetic, KnOTS-TIES, and WUDI**. Success and failure recordings are both retained. Real-robot outcomes were not annotated in the supplied files. GIFs and comparison MP4s are viewing derivatives; all **168 supplied recordings** remain available through the index above.
+
+All images and video links on this page use relative paths. An optional [browser gallery](index.html) provides filters and native video controls when served as a website. To view it locally, run `python -m http.server 8000` from the repository root and open `http://localhost:8000`.
+
+## 6. Method and source code
+
+TCR collects inputs during frozen-expert execution, replays the partially merged network in forward order, and fits linear modules with prior-centered ridge regression. Two calibration passes produce one fixed π0.5 policy without an additional inference-time router. The supported scope contains **418 linear modules and 422 adapted tensors**.
+
+| Resource | Contents |
+| :--- | :--- |
+| [Method-to-code mapping](docs/reproduction.md) | Merge equations, native replay, implementation scope, and reproduction requirements |
+| [Setup](docs/SETUP.md) · [Usage](docs/USAGE.md) | Dependencies, expert preparation, calibration, merging, and evaluation |
+| [Real-robot baselines](docs/REAL_ROBOT_BASELINES.md) | Model Soups, TIES, RegMean++, and FeatCal implementations |
+| [Experiments](docs/experiments.md) | Component ablations and parameter-study generators |
+| [Validation](docs/VALIDATION.md) | Historical implementation checks and their scope |
+
+<details>
+<summary><strong>Installation and a minimal merge command</strong></summary>
+
+Use Python 3.12 and the pinned π0.5 runtime described in the setup guide. From the downloaded repository root:
 
 ```bash
-python -m http.server 8000
-```
-
-## How TCR works
-
-```mermaid
-flowchart LR
-    A[Compatible expert policies] --> B[Frozen-expert execution]
-    B --> C[Two independent calibration caches]
-    C --> D[Forward-order replay and regression]
-    A --> D
-    D --> E[One merged policy]
-```
-
-1. **Collect execution inputs.** Record native generation states from complete frozen-expert episodes.
-2. **Fit in forward order.** Replay the partially merged network and solve prior-centered ridge regressions for linear modules.
-3. **Calibrate twice.** Start pass 1 from the expert mean; pass 2 uses the first pass as its prior and inherits its numerical ridge map.
-4. **Deploy one policy.** The resulting π0.5 checkpoint needs no extra inference router.
-
-The supported scope covers **418 linear modules and 422 adapted tensors**. The source also provides Model Soups, TIES, RegMean++, and FeatCal baselines, component ablations, and small parameter-study generators. Some additional methods appear only in the supplied comparison videos; their implementations are not included here.
-
-## Getting started
-
-Use **Python 3.12** and the pinned π0.5 environment. See [Environment setup](docs/SETUP.md) for the full dependency and simulator instructions.
-
-```bash
-# Clone the repository, then use your Python 3.12 environment:
-git clone https://github.com/Chatonz/vla-merge.git
-cd vla-merge
 python -m pip install -c requirements/constraints.txt -e '.[pi05,test]'
 pytest -q
 
-# Optional: LIBERO rollout collection and evaluation
-python -m pip install -c requirements/constraints.txt -e '.[libero]'
-```
-
-Prepare a shared dense base, compatible expert checkpoints, and two execution caches per expert, then edit [configs/pi05.json](configs/pi05.json). Paths resolve relative to the configuration file.
-
-```bash
+# After preparing expert checkpoints and calibration caches:
 tcr check --config configs/pi05.json
 tcr merge --config configs/pi05.json --dry-run
 tcr merge --config configs/pi05.json
 ```
 
-The final merged policy is written to `outputs/main/merged/`. The [step-by-step usage guide](docs/USAGE.md) covers expert export, cache collection, merging, ablations, and evaluation.
+Edit [configs/pi05.json](configs/pi05.json); paths resolve relative to the configuration file. The final model is written to `outputs/main/merged/`. Model weights, calibration caches, datasets, simulator assets, and historical evaluation records are not bundled. Full merging requires a compatible runtime and substantial host/GPU memory.
 
-Model weights, calibration caches, datasets, simulator assets, and historical evaluation records are not bundled. Full merging requires a compatible model runtime and substantial host/GPU memory. See [reproduction scope](docs/reproduction.md) for the inputs needed to reproduce the paper's exact results.
+</details>
 
-## Repository layout
-
-```text
-src/                 TCR implementation, baselines, calibration, and π0.5 adapters
-configs/             Merge and calibration examples
-scripts/             CLI wrappers and media preparation tools
-examples/            Integration with an existing rollout loop
-tests/               Numerical and workflow checks
-docs/                Setup, usage, video index, and validation notes
-assets/videos/       48 real-robot MP4s + 120 LIBERO MP4s
-assets/previews/     Six animated README previews
-assets/posters/      Video thumbnails
-assets/media.json    Complete media manifest
-index.html           Browser video gallery
-```
-
-## Documentation
-
-| Guide | Contents |
-| :--- | :--- |
-| [Setup](docs/SETUP.md) · [Usage](docs/USAGE.md) | Environment and end-to-end workflow |
-| [Method & reproduction](docs/reproduction.md) | Method-to-code mapping and reproduction requirements |
-| [Real-robot baselines](docs/REAL_ROBOT_BASELINES.md) | Baseline configurations and commands |
-| [Experiments](docs/experiments.md) | Component ablations and parameter studies |
-| [Validation](docs/VALIDATION.md) | Historical implementation checks and their scope |
-| [Video index](docs/VIDEOS.md) · [Publishing](docs/PUBLISHING.md) | Media collection and GitHub setup |
-
-## License
-
-The implementation is distributed under Apache-2.0; see [LICENSE](LICENSE). LeRobot, Transformers, PEFT, model weights, and datasets retain their own licenses. Video provenance and export details are listed in the [media index](docs/VIDEOS.md).
+The implementation is distributed under Apache-2.0; see [LICENSE](LICENSE). Third-party models, libraries, and datasets retain their own licenses.

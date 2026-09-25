@@ -22,8 +22,8 @@ publish the prepared source and media files rather than those archives.
 
 ## README video display
 
-GitHub renders the six GIF previews directly in the README. Each preview links
-to its full MP4; GitHub's file viewer can offer playback or download depending on
+GitHub renders the animated demonstrations and six comparison panels directly
+in the README. Each preview links to its corresponding MP4; GitHub's file viewer can offer playback or download depending on
 the client. The [Markdown index](VIDEOS.md) links every recording individually.
 Relative `<video>` embeds are not relied on for README playback.
 
@@ -60,14 +60,16 @@ full visual duration; original MOVs and ZIPs remain outside the repository.
 The LIBERO MP4s retain their supplied encoding and timing.
 
 The media manifest and index preserve source filenames and supplied episode
-outcomes. Real-robot outcomes were not supplied and are not inferred. The six
-README GIFs are selected previews with playback speeds disclosed in the README.
+outcomes. Real-robot outcomes were not supplied and are not inferred. The README previews and comparison panels use the playback speeds disclosed
+beside each figure.
 
-The media utilities require FFmpeg (or the optional `imageio-ffmpeg` package):
+The media utilities require FFmpeg (or the optional `imageio-ffmpeg` package).
+Comparison panels additionally require Pillow and DejaVu Sans fonts:
 
 ```bash
 python scripts/prepare_media.py --verify
 python scripts/build_previews.py
+python scripts/build_comparisons.py
 python scripts/build_video_index.py
 ```
 

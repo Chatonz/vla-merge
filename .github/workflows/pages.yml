@@ -31,7 +31,7 @@ jobs:
           cp gallery.html _site/index.html
           cp README.md _site/README.md
           cp assets/gallery.css assets/gallery.js assets/media.json _site/assets/
-          cp -R assets/posters assets/previews assets/videos _site/assets/
+          cp -R assets/posters assets/previews assets/videos assets/comparisons _site/assets/
           python - <<'PY'
           import os
           from pathlib import Path

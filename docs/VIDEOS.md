@@ -103,7 +103,7 @@ LIBERO-Long uses the `libero_10` directory. The gallery and MP4s retain the supp
 - Real-robot sources: `视频.zip`; method folders TCR, Expert, Featcal, RegMean++, Mean Soup, and TIES. All 48 source clips are represented.
 - Simulation sources: `videos(1).zip`; all 120 MP4s are retained byte-for-byte. Method/suite names and success/failure labels follow the supplied files.
 - Real-robot derivatives: full-duration H.264 MP4, at most 1280 × 720, 30 fps, muted, and without source location/device metadata. Original filenames are preserved in the manifest; MP4 filenames are lowercase for portable links.
-- README previews: two real-robot GIFs at 2× source speed and four selected LIBERO GIFs at 0.25× supplied file playback speed. GIFs loop; MP4 durations are unchanged.
+- README previews: TCR real-robot GIFs at 2× source speed and LIBERO GIFs at 0.25× supplied file playback speed, including failure examples. Six comparison panels show the selected methods at those same speeds, with final frames held for ended clips. See the [comparison manifest](../assets/comparisons/manifest.json) for exact inputs. The 168 original recording MP4s keep their supplied durations.
 - Original ZIPs and MOVs are kept outside the repository. Videos are demonstrations, not model weights, datasets, or calibration caches.
 
 See [assets/media.json](../assets/media.json) for source filenames, paths, durations, dimensions, and outcome labels. For browser playback and GitHub Pages setup, see [Publishing](PUBLISHING.md).
