@@ -4,9 +4,9 @@
 (() => {
   const PAGE_SIZE = 12;
   const METHODS = {
-    tcr: "TCR (ours)", experts: "Experts", featcal: "FeatCal", regmeanpp: "RegMean++",
-    soup: "Mean Soup", ties: "TIES", knots_ties: "KnOTS-TIES", regmean: "RegMean",
-    task_arithmetic: "Task Arithmetic", wudi: "WUDI"
+    soup: "Soup", ties: "TIES", regmeanpp: "RegMean++", featcal: "FeatCal",
+    regmean: "RegMean", knots_ties: "KnOTS-TIES", task_arithmetic: "Task Arithmetic",
+    wudi: "WUDI", tcr: "TCR (ours)", experts: "Expert (reference)"
   };
   const TASKS = {
     task1: "Task 1", task2: "Task 2", libero_spatial: "LIBERO-Spatial",
@@ -66,7 +66,7 @@
   }
 
   function createCard(recording) {
-    const card = node("article", `recording-card${recording.method === "tcr" ? " is-tcr" : ""}`);
+    const card = node("article", `recording-card${recording.method === "tcr" ? " is-tcr" : recording.method === "experts" ? " is-reference" : ""}`);
     const frame = node("div", "video-frame");
     const video = node("video");
     video.controls = true;
@@ -85,6 +85,7 @@
     const content = node("div", "card-content");
     const topline = node("div", "card-topline");
     topline.append(node("span", "method-badge", METHODS[recording.method] || recording.method));
+    if (recording.method === "experts") card.setAttribute("aria-label", "Expert reference policy recording");
     if (recording.domain === "libero" && ["success", "failure"].includes(recording.outcome)) {
       const outcome = node("span", `outcome ${recording.outcome}`, recording.outcome === "success" ? "Success" : "Failure");
       outcome.title = "Outcome label from the supplied recording filename; not an aggregate score.";

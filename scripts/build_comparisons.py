@@ -22,12 +22,12 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "assets/comparisons"
 METHODS = [
-    ("tcr", "TCR (ours)"),
-    ("experts", "Expert"),
-    ("featcal", "FeatCal"),
-    ("regmeanpp", "RegMean++"),
-    ("soup", "Mean Soup"),
+    ("soup", "Soup"),
     ("ties", "TIES"),
+    ("regmeanpp", "RegMean++"),
+    ("featcal", "FeatCal"),
+    ("tcr", "TCR"),
+    ("experts", "Expert"),
 ]
 PANELS = [
     ("real-task1", "Real robot / Task 1", "real_robot", "task1", None),
@@ -44,6 +44,8 @@ HEADER = "#213041"
 WHITE = "#f4f7fb"
 MUTED = "#b9c8d7"
 TEAL = "#54dac4"
+REFERENCE_HEADER = "#463d2d"
+REFERENCE_ACCENT = "#f1d28d"
 
 
 def resolve_ffmpeg(explicit):
@@ -153,6 +155,9 @@ def select_sources(ffmpeg, media, domain, task, episode, speed):
         sources.append({
             "method": method,
             "label": label,
+            "role": "reference_policy" if method == "experts" else "merged_policy",
+            "role_label": ("REFERENCE POLICY" if method == "experts" else
+                           "OURS / MERGED POLICY" if method == "tcr" else "MERGED POLICY"),
             "source_path": source["path"],
             "source_sha256": sha256(path),
             "source_fps": source["fps"],
@@ -170,7 +175,10 @@ def select_sources(ffmpeg, media, domain, task, episode, speed):
 
 def layout(title, sources, domain, speed):
     tile_width, tile_height = (320, 180) if domain == "real_robot" else (240, 240)
-    gutter, top, label_height, footer = 12, 60, 38, 38
+    # Give the method, policy role, and original outcome their own lines.
+    # This also keeps the narrow LIBERO tiles legible in the inline GIFs.
+    gutter, top, footer = 12, 60, 38
+    label_height = 56 if domain == "real_robot" else 74
     width = tile_width * 3 + gutter * 4
     height = top + (tile_height + label_height) * 2 + gutter * 3 + footer
     canvas = Image.new("RGB", (width, height), BG)
@@ -182,19 +190,28 @@ def layout(title, sources, domain, speed):
     for item in sources:
         x = gutter + item["column"] * (tile_width + gutter)
         y = top + item["row"] * (tile_height + label_height + gutter)
-        draw.rectangle((x, y, x + tile_width - 1, y + label_height - 1), fill=HEADER)
+        is_reference = item["role"] == "reference_policy"
+        header_color = REFERENCE_HEADER if is_reference else HEADER
+        draw.rectangle((x, y, x + tile_width - 1, y + label_height - 1), fill=header_color)
+        if is_reference:
+            # Draw in the gutter, preserving every source pixel in the scene.
+            draw.rectangle((x - 3, y - 3, x + tile_width + 2,
+                            y + label_height + tile_height + 2),
+                           outline=REFERENCE_ACCENT, width=2)
         name_color = TEAL if item["method"] == "tcr" else WHITE
         draw.text((x + 8, y + 8), item["label"], font=font(18, True), fill=name_color)
+        role_color = REFERENCE_ACCENT if is_reference else MUTED
+        draw.text((x + 8, y + 33), item["role_label"], font=font(11, True), fill=role_color)
         if item["original_outcome"]:
             outcome = item["original_outcome"].upper()
             color = "#8ce5b1" if outcome == "SUCCESS" else "#ffb3ae"
-            draw.text((x + tile_width - 8, y + 13), outcome, font=font(11, True),
-                      fill=color, anchor="ra")
+            draw.text((x + 8, y + 52), outcome, font=font(11, True), fill=color)
         positions.append((x, y + label_height))
-    draw.text((gutter, height - 31), "Shared clock | Shorter clips freeze at end; no individual replay",
+    clock_y = height - (38 if domain == "libero" else 31)
+    draw.text((gutter, clock_y), "Shared clock | Shorter clips freeze at end; no individual replay",
               font=font(14), fill=MUTED)
     if domain == "libero":
-        draw.text((width - gutter, height - 12), "SUCCESS / FAILURE: original clip labels",
+        draw.text((width - gutter, height - 20), "SUCCESS / FAILURE: original clip labels",
                   font=font(11), fill=MUTED, anchor="ra")
     return canvas, positions, (tile_width, tile_height)
 
@@ -294,6 +311,8 @@ def build_panel(ffmpeg, media, specification):
         "outcome_labels": "Original filename and media-index labels only; real-robot clips have no outcome labels.",
         "layout": {"columns": 3, "rows": 2, "width": base.width, "height": base.height,
                    "scene_tile_width": tile_size[0], "scene_tile_height": tile_size[1],
+                   "header_height": 56 if domain == "real_robot" else 74,
+                   "reference_style": "Expert is last, labeled REFERENCE POLICY, with an amber header and an outline outside the scene.",
                    "scene_fit": "Preserve full scene and aspect ratio; letterbox if necessary."},
         "sources": sources,
         "outputs": {
@@ -334,11 +353,13 @@ def main():
             panels.append(old_panels[specification[0]])
         # Save after each completed panel so an interrupted rebuild remains reviewable.
         manifest = {
-            "version": 1,
+            "version": 2,
             "generator": "scripts/build_comparisons.py",
             "rebuild_command": "python scripts/build_comparisons.py",
             "dependencies": ["Python 3", "Pillow", "FFmpeg with libx264", "DejaVu Sans fonts"],
             "method_order": [method for method, _ in METHODS],
+            "policy_roles": {"merged_policy": "Soup, TIES, RegMean++, FeatCal, and TCR are the merging methods.",
+                             "reference_policy": "Expert is a separate expert-policy reference, displayed last."},
             "source_duration_basis": "Exact decoded frame count divided by the published source FPS (constant-frame-rate sources).",
             "timeline_sampling": "Every tile samples the same output time; source frame = floor(time * speed * source FPS), clamped to final frame.",
             "metadata_policy": "No source metadata, chapters, audio, or JPEG EXIF copied into outputs.",

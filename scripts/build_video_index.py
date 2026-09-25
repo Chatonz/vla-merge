@@ -7,10 +7,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 METHODS = {
-    "tcr": "**TCR (ours)**", "experts": "Expert", "featcal": "FeatCal",
-    "regmeanpp": "RegMean++", "regmean": "RegMean", "soup": "Mean Soup",
-    "ties": "TIES", "knots_ties": "KNOTS-TIES",
+    "soup": "Soup", "ties": "TIES", "regmeanpp": "RegMean++", "featcal": "FeatCal",
+    "regmean": "RegMean", "knots_ties": "KnOTS-TIES",
     "task_arithmetic": "Task Arithmetic", "wudi": "WUDI",
+    "tcr": "**TCR (ours)**", "experts": "**Expert (reference)**",
 }
 
 
@@ -20,9 +20,12 @@ def main():
         "# Video collection", "", "[← Back to TCR](../README.md)", "",
         "All **168 supplied recordings**: 48 real-robot clips and 120 LIBERO episodes. "
         "Click a thumbnail or a recording link to open its MP4.", "",
+        "The main comparison order is **Soup → TIES → RegMean++ → FeatCal → TCR → Expert**. "
+        "Expert is a reference policy and is listed last. Additional LIBERO baselines "
+        "appear before TCR and the Expert reference in the complete tables.", "",
         "[Real robot](#real-robot) · [LIBERO](#libero) · [Provenance](#provenance)", "",
         "## Real robot", "",
-        "Six methods, two tasks, and four recordings per method/task. Task names "
+        "Five merging methods plus the Expert reference, two tasks, and four recordings per entry/task. Task names "
         "follow the supplied folder labels. No success/failure annotations were "
         "provided for these recordings.", "",
     ]
@@ -38,14 +41,14 @@ def main():
         if task == "libero_spatial":
             lines += [
                 "## LIBERO", "",
-                "Ten methods, four suites, and three episodes per method/suite. "
+                "Nine merging methods plus the Expert reference, four suites, and three episodes per entry/suite. "
                 "All supplied episodes are task `00`, run `01`. Outcome labels "
                 "come from source filenames and are not independently re-evaluated. "
                 "These clips are qualitative examples, not aggregate benchmark results.", "",
                 "LIBERO-Long uses the `libero_10` directory. The gallery and MP4s "
                 "retain the supplied playback timing.", "",
             ]
-        lines += [f"### {title}", "", "| Method | Preview | Recordings |", "| :--- | :---: | :--- |"]
+        lines += [f"### {title}", "", "| Method / reference | Preview | Recordings |", "| :--- | :---: | :--- |"]
         for method, label in METHODS.items():
             items = sorted(
                 (v for v in videos if v["domain"] == domain and v["task"] == task and v["method"] == method),
