@@ -1,0 +1,19 @@
+{
+  "base_model": "../checkpoints/base",
+  "experts": {
+    "spatial": {"checkpoint": "../checkpoints/spatial", "cache_a": "../caches/a/spatial", "cache_b": "../caches/b/spatial"},
+    "object": {"checkpoint": "../checkpoints/object", "cache_a": "../caches/a/object", "cache_b": "../caches/b/object"},
+    "goal": {"checkpoint": "../checkpoints/goal", "cache_a": "../caches/a/goal", "cache_b": "../caches/b/goal"},
+    "long": {"checkpoint": "../checkpoints/long", "cache_a": "../caches/a/long", "cache_b": "../caches/b/long"}
+  },
+  "output": "../outputs/main",
+  "device": "cuda",
+  "passes": 2,
+  "variant": "full",
+  "ridge_ratio": 0.05,
+  "max_correction_ratio": 3.0,
+  "rows_per_call": 10,
+  "rows_per_request": 16,
+  "first_pass_weighting": "prior",
+  "strict_paper_budget": true
+}

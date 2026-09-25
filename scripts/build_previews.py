@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+"""Rebuild the six README GIFs from the published MP4 files."""
+
+import argparse
+from pathlib import Path
+import shutil
+import subprocess
+
+
+ROOT = Path(__file__).resolve().parents[1]
+PREVIEWS = [
+    ("real-task1", "real_robot/tcr/task1/img_5011.mp4", 0.5, 448),
+    ("real-task2", "real_robot/tcr/task2/img_5021.mp4", 0.5, 448),
+    ("libero-spatial", "libero/tcr/libero_spatial/task00_r01_ep00_success.mp4", 4, 280),
+    ("libero-object", "libero/tcr/libero_object/task00_r01_ep00_success.mp4", 4, 280),
+    ("libero-goal", "libero/tcr/libero_goal/task00_r01_ep01_success.mp4", 4, 280),
+    ("libero-long", "libero/tcr/libero_10/task00_r01_ep00_success.mp4", 4, 280),
+]
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--ffmpeg", help="Path to an FFmpeg binary")
+    args = parser.parse_args()
+    ffmpeg = args.ffmpeg or shutil.which("ffmpeg")
+    if not ffmpeg:
+        try:
+            import imageio_ffmpeg
+
+            ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+        except ImportError:
+            parser.error("Install FFmpeg or imageio-ffmpeg, or pass --ffmpeg.")
+    output = ROOT / "assets/previews"
+    output.mkdir(parents=True, exist_ok=True)
+    for name, relative, multiplier, width in PREVIEWS:
+        source = ROOT / "assets/videos" / relative
+        filters = (
+            f"[0:v:0]setpts={multiplier}*(PTS-STARTPTS),fps=10,"
+            f"scale={width}:-2:flags=lanczos,split[a][b];"
+            "[a]palettegen=max_colors=128:stats_mode=diff[p];"
+            "[b][p]paletteuse=dither=bayer:bayer_scale=3"
+        )
+        target = output / f"{name}.gif"
+        subprocess.run(
+            [
+                ffmpeg, "-v", "error", "-y", "-i", str(source),
+                "-filter_complex", filters, "-an", "-map_metadata", "-1",
+                "-loop", "0", "-threads", "2", str(target),
+            ],
+            check=True,
+        )
+        print(f"{target.relative_to(ROOT)}: {target.stat().st_size:,} bytes")
+
+
+if __name__ == "__main__":
+    main()

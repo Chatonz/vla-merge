@@ -1,0 +1,52 @@
+name: Publish video gallery
+
+# Run manually after enabling GitHub Pages with GitHub Actions as its source.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Prepare gallery files
+        env:
+          GALLERY_REPOSITORY: ${{ github.repository }}
+        run: |
+          mkdir -p _site/assets
+          cp gallery.html _site/gallery.html
+          cp gallery.html _site/index.html
+          cp README.md _site/README.md
+          cp assets/gallery.css assets/gallery.js assets/media.json _site/assets/
+          cp -R assets/posters assets/previews assets/videos _site/assets/
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          readme_url = f'https://github.com/{os.environ["GALLERY_REPOSITORY"]}#readme'
+          for name in ('gallery.html', 'index.html'):
+              page = Path('_site') / name
+              page.write_text(page.read_text().replace('href="README.md"', f'href="{readme_url}"'))
+          PY
+          touch _site/.nojekyll
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

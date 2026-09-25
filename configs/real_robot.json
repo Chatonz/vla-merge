@@ -1,0 +1,17 @@
+{
+  "base_model": "../checkpoints/base",
+  "experts": {
+    "task1": {"checkpoint": "../checkpoints/task1", "cache_a": "../caches/a/task1", "cache_b": "../caches/b/task1"},
+    "task2": {"checkpoint": "../checkpoints/task2", "cache_a": "../caches/a/task2", "cache_b": "../caches/b/task2"}
+  },
+  "output": "../outputs/real_robot/tcr",
+  "device": "cuda",
+  "passes": 2,
+  "variant": "full",
+  "ridge_ratio": 0.05,
+  "max_correction_ratio": 3.0,
+  "rows_per_call": 10,
+  "rows_per_request": 16,
+  "first_pass_weighting": "prior",
+  "strict_paper_budget": false
+}

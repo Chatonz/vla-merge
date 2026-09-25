@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tcr-merging"
+version = "0.2.0"
+description = "Trajectory-Calibrated Regression for pi0.5 policy merging"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {file = "LICENSE"}
+dependencies = ["torch>=2.7,<2.8", "safetensors>=0.5,<0.6", "numpy>=1.24"]
+
+[project.optional-dependencies]
+pi05 = ["lerobot[pi,peft] @ git+https://github.com/huggingface/lerobot.git@bf31dd794ffb4f87380aba3912f64421e8352d3c", "transformers==5.5.4", "peft==0.20.0"]
+libero = ["lerobot[libero] @ git+https://github.com/huggingface/lerobot.git@bf31dd794ffb4f87380aba3912f64421e8352d3c"]
+test = ["pytest>=8,<9"]
+
+[project.scripts]
+tcr = "tcr_merging.cli:main"
+
+[tool.setuptools]
+packages = ["tcr_merging", "tcr_merging.merging", "tcr_merging.pi05", "tcr_merging.calibration", "tcr_merging.baselines"]
+
+[tool.setuptools.package-dir]
+tcr_merging = "src"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]

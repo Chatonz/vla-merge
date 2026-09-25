@@ -1,0 +1,12 @@
+{
+  "base_model": "../checkpoints/base",
+  "experts": {
+    "spatial": {"checkpoint": "../checkpoints/spatial", "cache_a": "../caches/demo_a/spatial", "cache_b": "../caches/demo_b/spatial"},
+    "object": {"checkpoint": "../checkpoints/object", "cache_a": "../caches/demo_a/object", "cache_b": "../caches/demo_b/object"},
+    "goal": {"checkpoint": "../checkpoints/goal", "cache_a": "../caches/demo_a/goal", "cache_b": "../caches/demo_b/goal"},
+    "long": {"checkpoint": "../checkpoints/long", "cache_a": "../caches/demo_a/long", "cache_b": "../caches/demo_b/long"}
+  },
+  "output": "../outputs/demo",
+  "variant": "demo",
+  "ridge_reference": "../outputs/main/pass1"
+}
